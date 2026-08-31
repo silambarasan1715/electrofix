@@ -27,7 +27,7 @@ const LoginPage = () => {
         setIsForgotSubmitting(true);
         setForgotError('');
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+            const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
             const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -55,7 +55,7 @@ const LoginPage = () => {
         setIsForgotSubmitting(true);
         setForgotError('');
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+            const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
             const response = await fetch(`${API_URL}/api/auth/reset-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -94,7 +94,7 @@ const LoginPage = () => {
                 return;
             }
 
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+            const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
             const response = await fetch(`${API_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
