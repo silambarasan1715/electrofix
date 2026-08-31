@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcryptjs');
 const path = require('path');
 
@@ -11,39 +10,60 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Initialize SQLite DB
-const dbPath = process.env.VERCEL ? '/tmp/database.sqlite' : path.resolve(__dirname, 'database.sqlite');
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('Error opening database', err.message);
-    } else {
-        console.log('Connected to the SQLite database.');
-        // Create users table if it doesn't exist
-        db.run(`
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                location TEXT,
-                email TEXT UNIQUE NOT NULL,
-                password TEXT NOT NULL
-            )
-        `);
-        // Create otps table
-        db.run(`
-            CREATE TABLE IF NOT EXISTS otps (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email TEXT NOT NULL,
-                otp TEXT NOT NULL,
-                expires_at INTEGER NOT NULL
-            )
-        `);
+// Safe DB Initialization
+let db;
+let dbError = null;
+
+try {
+    const sqlite3 = require('sqlite3').verbose();
+    const dbPath = process.env.VERCEL ? '/tmp/database.sqlite' : path.resolve(__dirname, 'database.sqlite');
+    db = new sqlite3.Database(dbPath, (err) => {
+        if (err) {
+            dbError = err.message;
+            console.error('Error opening database', err.message);
+        } else {
+            console.log('Connected to the SQLite database.');
+            db.run(`
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    location TEXT,
+                    email TEXT UNIQUE NOT NULL,
+                    password TEXT NOT NULL
+                )
+            `);
+            db.run(`
+                CREATE TABLE IF NOT EXISTS otps (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    email TEXT NOT NULL,
+                    otp TEXT NOT NULL,
+                    expires_at INTEGER NOT NULL
+                )
+            `);
+        }
+    });
+} catch (e) {
+    dbError = 'Failed to load sqlite3: ' + e.toString();
+    console.error(dbError);
+}
+
+// Global DB Check Middleware
+const checkDb = (req, res, next) => {
+    if (dbError) {
+        return res.status(500).json({ error: 'Database Initialization Error on Vercel: ' + dbError });
     }
+    next();
+};
+
+// Health Route for debugging
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', dbError });
 });
 
 // Routes
 
 // 1. Signup Route
-app.post('/api/auth/signup', async (req, res) => {
+app.post('/api/auth/signup', checkDb, async (req, res) => {
     const { name, location, email, password } = req.body;
 
     if (!name || !email || !password) {
@@ -51,7 +71,6 @@ app.post('/api/auth/signup', async (req, res) => {
     }
 
     try {
-        // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -61,7 +80,7 @@ app.post('/api/auth/signup', async (req, res) => {
                 if (err.message.includes('UNIQUE constraint failed: users.email')) {
                     return res.status(409).json({ error: 'Email already exists' });
                 }
-                return res.status(500).json({ error: 'Failed to register user' });
+                return res.status(500).json({ error: 'Failed to register user: ' + err.message });
             }
             res.status(201).json({ message: 'User registered successfully', userId: this.lastID });
         });
@@ -71,7 +90,7 @@ app.post('/api/auth/signup', async (req, res) => {
 });
 
 // 2. Login Route
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', checkDb, (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -88,7 +107,6 @@ app.post('/api/auth/login', (req, res) => {
         }
 
         try {
-            // Compare hashed password
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) {
                 return res.status(401).json({ error: 'Invalid email or password' });
@@ -102,7 +120,7 @@ app.post('/api/auth/login', (req, res) => {
 });
 
 // 3. Forgot Password Route
-app.post('/api/auth/forgot-password', (req, res) => {
+app.post('/api/auth/forgot-password', checkDb, (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required' });
 
@@ -110,22 +128,18 @@ app.post('/api/auth/forgot-password', (req, res) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         if (!user) return res.status(404).json({ error: 'User not found' });
 
-        // Generate 6-digit OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+        const expiresAt = Date.now() + 10 * 60 * 1000;
 
         db.run(`INSERT INTO otps (email, otp, expires_at) VALUES (?, ?, ?)`, [email, otp, expiresAt], (insertErr) => {
             if (insertErr) return res.status(500).json({ error: 'Failed to generate OTP' });
-            
-            console.log(`\n=== OTP GENERATED ===\nEmail: ${email}\nOTP: ${otp}\n=====================\n`);
-            // Returning otp for dev/testing ease
             res.status(200).json({ message: 'OTP sent successfully', otp });
         });
     });
 });
 
 // 4. Reset Password Route
-app.post('/api/auth/reset-password', (req, res) => {
+app.post('/api/auth/reset-password', checkDb, (req, res) => {
     const { email, otp, newPassword } = req.body;
     if (!email || !otp || !newPassword) return res.status(400).json({ error: 'Missing required fields' });
 
@@ -141,7 +155,6 @@ app.post('/api/auth/reset-password', (req, res) => {
             db.run(`UPDATE users SET password = ? WHERE email = ?`, [hashedPassword, email], (updateErr) => {
                 if (updateErr) return res.status(500).json({ error: 'Failed to reset password' });
 
-                // Delete the used OTP
                 db.run(`DELETE FROM otps WHERE email = ?`, [email]);
                 res.status(200).json({ message: 'Password reset successfully' });
             });
@@ -150,8 +163,6 @@ app.post('/api/auth/reset-password', (req, res) => {
         }
     });
 });
-
-
 
 if (require.main === module) {
     app.listen(PORT, () => {
