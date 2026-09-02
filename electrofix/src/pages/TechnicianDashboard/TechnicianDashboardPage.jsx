@@ -79,7 +79,7 @@ const TechnicianDashboardPage = () => {
     };
 
     return (
-        <div className="bg-background min-h-screen text-slate-800 font-body-md pb-12 relative overflow-hidden">
+        <div className="bg-transparent  min-h-screen text-slate-800 font-body-md pb-12 relative overflow-hidden">
             {/* Background elements */}
             <div className="fixed top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-400/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
 
@@ -150,11 +150,11 @@ const TechnicianDashboardPage = () => {
                                         
                                         <div className="mb-5">
                                             <p className="text-[13px] font-bold text-slate-500 mb-2 uppercase tracking-wider">Customer Issue:</p>
-                                            <p className="text-[15px] text-slate-800 bg-slate-50 p-4 rounded-xl border border-slate-200">{booking.issue}</p>
+                                            <p className="text-[15px] text-slate-800 bg-transparent  p-4 rounded-xl border border-slate-200">{booking.issue}</p>
                                         </div>
                                         
                                         <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-2 text-slate-600 bg-slate-100/50 px-3 py-1.5 rounded-lg border border-slate-200/50">
+                                            <div className="flex items-center gap-2 text-slate-600 bg-transparent /50 px-3 py-1.5 rounded-lg border border-slate-200/50">
                                                 <span className="material-symbols-outlined text-[18px]">location_on</span>
                                                 <span className="font-medium text-[14px]">{booking.address}</span>
                                             </div>
@@ -204,7 +204,7 @@ const TechnicianDashboardPage = () => {
                             <div className="flex flex-col gap-5">
                                 {currentWorks.map(work => (
                                     <div key={work.id} className="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/50 p-5 shadow-sm hover:shadow-md transition-all flex gap-5 items-center">
-                                        <img src={work.image} alt={work.title} className="w-24 h-24 rounded-xl object-cover bg-slate-100 shadow-sm" />
+                                        <img src={work.image} alt={work.title} className="w-24 h-24 rounded-xl object-cover bg-transparent  shadow-sm" />
                                         <div>
                                             <h4 className="font-extrabold text-slate-900 text-lg leading-tight mb-1">{work.title}</h4>
                                             <p className="text-[14px] font-medium text-slate-500 line-clamp-2">{work.description}</p>
@@ -275,3 +275,4 @@ const TechnicianDashboardPage = () => {
 };
 
 export default TechnicianDashboardPage;
+

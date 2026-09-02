@@ -59,9 +59,20 @@ export const RegistrationProvider = ({ children }) => {
     };
 
     const updateTechnicianDetails = (id, newDetails) => {
-        setDirectoryTechnicians(prev => prev.map(tech => 
-            tech.id === id ? { ...tech, ...newDetails } : tech
-        ));
+        setDirectoryTechnicians(prev => {
+            const updated = prev.map(tech => tech.id === id ? { ...tech, ...newDetails } : tech);
+            
+            // Also update localStorage for persistence
+            try {
+                const registered = JSON.parse(localStorage.getItem('registeredTechnicians') || '[]');
+                const updatedRegistered = registered.map(tech => tech.id === id ? { ...tech, ...newDetails } : tech);
+                localStorage.setItem('registeredTechnicians', JSON.stringify(updatedRegistered));
+            } catch (e) {
+                console.error("Failed to update local storage", e);
+            }
+            
+            return updated;
+        });
     };
 
     const [verificationDetails, setVerificationDetails] = useState({

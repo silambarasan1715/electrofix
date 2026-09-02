@@ -46,6 +46,7 @@ const TechnicianDiscoveryPage = () => {
     const [sortBy, setSortBy] = useState('distance');
     const [minRatingFilter, setMinRatingFilter] = useState(0);
     const [showFilterModal, setShowFilterModal] = useState(false);
+    const [previewWorksTech, setPreviewWorksTech] = useState(null);
 
     const handleManualLocationSearch = async () => {
         if (!manualLocationInput.trim()) return;
@@ -177,7 +178,7 @@ const TechnicianDiscoveryPage = () => {
     const inDemand = filteredTechnicians.slice(6, 14);
 
     return (
-        <div className="bg-gray-100 text-slate-900 antialiased font-sans min-h-screen pb-[calc(64px+env(safe-area-inset-bottom))] md:pb-0 flex flex-col relative w-full md:max-w-md md:mx-auto md:shadow-2xl md:bg-white overflow-x-hidden">
+        <div className="bg-transparent  text-slate-900 antialiased font-sans min-h-screen pb-[calc(64px+env(safe-area-inset-bottom))] md:pb-0 flex flex-col relative w-full md:max-w-md md:mx-auto md:shadow-2xl md:bg-white overflow-x-hidden">
             
             {/* Location Selection Modal */}
             {showLocationModal && (
@@ -211,7 +212,7 @@ const TechnicianDiscoveryPage = () => {
                                 onChange={(e) => setManualLocationInput(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleManualLocationSearch()}
                                 placeholder="Enter area, city, pincode..."
-                                className="bg-gray-50 border border-gray-200 text-slate-900 text-[14px] font-medium rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 outline-none"
+                                className="bg-transparent  border border-gray-200 text-slate-900 text-[14px] font-medium rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3 outline-none"
                             />
                         </div>
                         <button 
@@ -232,7 +233,7 @@ const TechnicianDiscoveryPage = () => {
                     <div className="bg-white w-[85%] sm:w-[350px] h-full shadow-2xl animate-slide-in-right p-5 flex flex-col overflow-y-auto">
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-[18px] font-extrabold text-slate-900">Sort & Filter</h3>
-                            <button onClick={() => setShowFilterModal(false)} className="text-gray-400 hover:text-gray-600 bg-gray-100 p-2 rounded-full transition-colors">
+                            <button onClick={() => setShowFilterModal(false)} className="text-gray-400 hover:text-gray-600 bg-transparent  p-2 rounded-full transition-colors">
                                 <span className="material-symbols-outlined text-[20px]">close</span>
                             </button>
                         </div>
@@ -295,13 +296,16 @@ const TechnicianDiscoveryPage = () => {
             {/* Top Bar (Flipkart Style) */}
             <header className="bg-white px-4 pt-3 pb-2 flex items-center justify-between z-20 sticky top-0">
                 <div className="flex items-center gap-2">
+                    <button onClick={() => navigate('/starting')} className="flex items-center justify-center p-1 -ml-1 text-slate-500 hover:text-primary transition-colors">
+                        <span className="material-symbols-outlined text-[24px]">arrow_back</span>
+                    </button>
                     <button onClick={() => navigate('/starting')} className="flex items-center cursor-pointer">
                         <img alt="RepairHub Logo" className="h-7 w-auto object-contain hover:scale-105 transition-transform" src="/logo.png" />
                         <span className="text-[16px] font-extrabold text-primary ml-1.5 tracking-tight">RepairHub</span>
                     </button>
                 </div>
                 
-                <div onClick={() => setShowLocationModal(true)} className="flex items-center gap-1 max-w-[50%] cursor-pointer hover:bg-gray-50 rounded px-1 transition-colors">
+                <div onClick={() => setShowLocationModal(true)} className="flex items-center gap-1 max-w-[50%] cursor-pointer hover:bg-transparent  rounded px-1 transition-colors">
                     <span className="material-symbols-outlined text-[16px] text-slate-800" style={{ fontVariationSettings: "'FILL' 1" }}>location_on</span>
                     <span className="text-[11px] text-slate-700 truncate font-medium">{locationDisplayText}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-500">expand_more</span>
@@ -347,7 +351,7 @@ const TechnicianDiscoveryPage = () => {
             </div>
 
             {/* Scrollable Content */}
-            <main className="flex-grow overflow-y-auto no-scrollbar bg-gray-100 flex flex-col gap-2">
+            <main className="flex-grow overflow-y-auto no-scrollbar bg-transparent  flex flex-col gap-2">
                 
                 {/* Hero Banners */}
                 {!searchQuery && selectedCategory === 'All' && (
@@ -379,7 +383,11 @@ const TechnicianDiscoveryPage = () => {
                                 >
                                     
                                     {/* Left Thumbnail */}
-                                    <div className="w-[80px] h-[80px] rounded-xl overflow-hidden flex-shrink-0 bg-slate-50 relative border border-slate-100">
+                                    <div 
+                                        className="w-[80px] h-[80px] rounded-xl overflow-hidden flex-shrink-0 bg-transparent  relative border border-slate-100 cursor-pointer"
+                                        onClick={() => tech.works && tech.works.length > 0 ? setPreviewWorksTech(tech) : navigate(`/profile/${tech.id}`, { state: { fromDiscovery: true } })}
+                                        title={tech.works && tech.works.length > 0 ? "Click to see recent works" : "View Profile"}
+                                    >
                                         <img alt={`Profile of ${tech.name}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src={tech.avatar} />
                                     </div>
 
@@ -403,7 +411,7 @@ const TechnicianDiscoveryPage = () => {
                                                 </div>
                                             </div>
                                             {tech.establishedYear && (
-                                                <span className="text-[9px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded flex-shrink-0 whitespace-nowrap">Est. {tech.establishedYear}</span>
+                                                <span className="text-[9px] font-bold text-slate-500 bg-transparent  px-1.5 py-0.5 rounded flex-shrink-0 whitespace-nowrap">Est. {tech.establishedYear}</span>
                                             )}
                                         </div>
                                         
@@ -420,7 +428,7 @@ const TechnicianDiscoveryPage = () => {
                                         
                                         <div className="flex items-center gap-2 mt-auto pt-2">
                                             <button 
-                                                onClick={() => navigate(`/profile/${tech.id}`)} 
+                                                onClick={() => navigate(`/profile/${tech.id}`, { state: { fromDiscovery: true } })} 
                                                 className="flex items-center justify-center gap-1 w-full h-8 bg-blue-600 text-white rounded-lg text-[11px] font-bold"
                                             >
                                                 View
@@ -443,17 +451,48 @@ const TechnicianDiscoveryPage = () => {
                     <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>home</span>
                     <span className="font-bold text-[10px] mt-0.5">Home</span>
                 </button>
-                <button onClick={() => navigate('/my-bookings')} className="flex flex-col items-center justify-center text-gray-500 hover:text-blue-600 transition-all">
-                    <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 0" }}>local_mall</span>
-                    <span className="font-bold text-[10px] mt-0.5">Bookings</span>
-                </button>
                 <button className="flex flex-col items-center justify-center text-gray-500 hover:text-blue-600 transition-all">
                     <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 0" }}>notifications</span>
                     <span className="font-bold text-[10px] mt-0.5">Alerts</span>
                 </button>
             </nav>
+
+            {/* Works Preview Modal */}
+            {previewWorksTech && (
+                <div className="fixed inset-0 z-[120] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+                        <div className="p-4 flex justify-between items-center border-b border-gray-100 bg-white sticky top-0">
+                            <h3 className="font-extrabold text-slate-900">Recent Works by {previewWorksTech.name}</h3>
+                            <button onClick={() => setPreviewWorksTech(null)} className="text-gray-500 hover:text-slate-800 bg-transparent  rounded-full p-1 transition-colors">
+                                <span className="material-symbols-outlined text-[20px]">close</span>
+                            </button>
+                        </div>
+                        <div className="overflow-y-auto p-4 flex flex-col gap-4">
+                            {previewWorksTech.works.map(work => (
+                                <div key={work.id} className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                                    <img src={work.image} alt={work.title} className="w-full h-48 sm:h-64 object-cover" />
+                                    <div className="p-3 bg-transparent ">
+                                        <p className="font-bold text-slate-900 text-[15px]">{work.title}</p>
+                                        <p className="text-[13px] text-slate-600 mt-1">{work.description}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="p-4 border-t border-gray-100 bg-white">
+                            <button 
+                                onClick={() => navigate(`/profile/${previewWorksTech.id}`, { state: { fromDiscovery: true } })}
+                                className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-hover transition-colors shadow-md flex justify-center items-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-[20px]">account_circle</span>
+                                View Full Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
 export default TechnicianDiscoveryPage;
+

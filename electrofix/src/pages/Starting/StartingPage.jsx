@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AIFloatingWidget from '../../components/AIFloatingWidget';
-
-
-
-
 
 const services = [
     { name: 'Mobile Repair', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB7OP2ghqU0TLunTuULri9tcvjr-C-mSmyf1xEkwjzioh0RXFiawaMaclvbrd881A9dC5i6lcavIolm3mBbNZ4YHMxfnsNcZUt9UDMimLPUHkYxYzTbKEffWjtyIfgZ1fnM3g71MoH5TwmSXfKtRZjIiLRQ3edB6Wg3Hos49Bc3QSODO8RfNaaM2Uv2gTSJ4JSfgXHZJlf_km7RQ-jGMJVli_1sbm0JopoTx5MaooP-QQQiy9CwOcsXTA' },
@@ -21,9 +17,17 @@ const StartingPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const userName = localStorage.getItem('userName') || 'Guest';
     const navigate = useNavigate();
+    const searchInputRef = useRef(null);
 
     const handleServiceClick = (serviceName) => {
         navigate(`/discovery/${encodeURIComponent(serviceName)}`);
+    };
+
+    const handleBookNowClick = () => {
+        if (searchInputRef.current) {
+            searchInputRef.current.focus();
+            searchInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     };
 
     const filteredServices = services.filter(service => 
@@ -39,131 +43,222 @@ const StartingPage = () => {
 
     const [currentSlide, setCurrentSlide] = useState(0);
 
+    const nextSlide = () => {
+        setCurrentSlide((prev) => (prev + 1) % slideImages.length);
+    };
+
+    const prevSlide = () => {
+        setCurrentSlide((prev) => (prev - 1 + slideImages.length) % slideImages.length);
+    };
+
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % slideImages.length);
-        }, 2000);
+        }, 4000);
         return () => clearInterval(timer);
     }, []);
 
     return (
-        <div className="bg-background text-slate-800 font-body-md min-h-screen relative">
-            {/* Background decorative elements */}
-            <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-400/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-            <div className="fixed top-[15%] right-[-10%] w-[45%] h-[45%] bg-purple-400/15 rounded-full blur-[140px] -z-10 pointer-events-none"></div>
-            <div className="fixed bottom-[-10%] left-[10%] w-[50%] h-[50%] bg-emerald-400/10 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
+        <div className="bg-gradient-to-br from-[#f8fafc] via-[#eff6ff] to-[#f0f9ff] text-slate-800 min-h-screen pb-12 font-sans relative overflow-hidden">
+            {/* Ambient Background Glows */}
+            <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-400/20 rounded-full blur-[120px] pointer-events-none"></div>
+            <div className="absolute bottom-[10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/15 rounded-full blur-[120px] pointer-events-none"></div>
 
-            {/* TopNavBar */}
-            <header className="glass shadow-sm relative w-full z-50 animate-fade-in-up">
-                <nav className="flex justify-between items-center w-full px-8 py-4 max-w-[1400px] mx-auto relative">
-                    {/* Left: Logo */}
-                    <Link className="flex items-center h-8 md:h-10 z-10" to="/">
-                        <img alt="RepairHub Logo" className="h-7 w-auto object-contain hover:scale-105 transition-transform" src="/logo.png" />
-                        <span className="text-2xl font-bold text-primary ml-2 hidden sm:block tracking-tight">RepairHub</span>
+            {/* TopAppBar - Glassmorphism */}
+            <header className="bg-white/70 backdrop-blur-xl border-b border-white/50 shadow-sm sticky top-0 z-50 transition-all duration-300">
+                <div className="flex justify-between items-center px-[20px] py-3 md:py-4 w-full max-w-7xl mx-auto">
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center gap-3 group">
+                        <img alt="RepairHub Logo" className="h-10 md:h-12 w-auto object-contain group-hover:rotate-3 group-hover:scale-110 transition-all duration-300" src="/logo.png" />
+                        <span className="text-xl md:text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-600 hidden sm:block tracking-tight drop-shadow-sm">RepairHub</span>
                     </Link>
                     
-                    {/* Center: Services and My Booking */}
-                    <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 md:gap-8">
-                        <a className="text-primary border-b-2 border-primary font-bold pb-1 text-[13px] md:text-[15px] whitespace-nowrap" href="#">Services</a>
-                        <Link className="text-slate-500 hover:text-primary transition-colors font-bold text-[13px] md:text-[15px] whitespace-nowrap" to="/my-bookings">My Bookings</Link>
-                    </div>
-                    
-                    {/* Right: My Account */}
-                    <Link to="/login" className="flex items-center gap-3 z-10 group cursor-pointer">
-                        <div className="hidden sm:flex flex-col text-right">
-                            <span className="text-[13px] font-bold text-slate-800 leading-tight group-hover:text-primary transition-colors">My Account</span>
-                            <span className="text-[11px] text-slate-500 font-medium">{userName}</span>
-                        </div>
-                        <div className="w-9 h-9 rounded-full bg-blue-50 border-2 border-primary flex items-center justify-center text-primary font-bold shadow-md group-hover:bg-blue-100 group-hover:scale-105 transition-all">
-                            {userName.charAt(0).toUpperCase()}
+                    {/* Desktop Navigation */}
+                    <nav className="hidden md:flex gap-8">
+                        <a className="font-bold text-[14px] text-blue-700 border-b-2 border-blue-700 pb-1 hover:text-blue-800 transition-colors" href="#">Services</a>
+                        <Link className="font-bold text-[14px] text-slate-500 hover:text-blue-600 hover:-translate-y-0.5 transition-all duration-200" to="/my-bookings">My Bookings</Link>
+                    </nav>
+
+                    {/* User Profile */}
+                    <Link to="/login" className="flex items-center group">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-50 border-2 border-blue-500/30 flex items-center justify-center text-blue-700 font-bold overflow-hidden cursor-pointer group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] group-hover:border-blue-500 transition-all duration-300 shadow-sm">
+                            {userName !== 'Guest' ? userName.charAt(0).toUpperCase() : (
+                                <span className="material-symbols-outlined text-[20px] md:text-[26px]">person</span>
+                            )}
                         </div>
                     </Link>
-                </nav>
+                </div>
+                
+                {/* Mobile Navigation */}
+                <div className="flex md:hidden px-[20px] pt-2 pb-0 border-b border-slate-200/50">
+                    <a className="flex-1 text-center font-bold text-[13px] text-blue-700 border-b-2 border-blue-700 pb-2" href="#">Services</a>
+                    <Link className="flex-1 text-center font-bold text-[13px] text-slate-500 pb-2 hover:text-blue-600 transition-colors" to="/my-bookings">My Bookings</Link>
+                </div>
             </header>
-            
-            <main className="pb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                {/* Dedicated Search Section */}
-                <section className="pt-2 px-4 w-full">
-                    <div className="max-w-xl mx-auto w-full relative group z-20">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 group-focus-within:text-primary transition-colors text-[22px] z-10">search</span>
-                        <input 
-                            className="w-full pl-12 pr-6 py-3.5 bg-white border border-slate-200 rounded-full focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all text-slate-900 shadow-md text-[15px] font-medium placeholder:text-slate-400 relative z-10" 
-                            placeholder="What service do you need today?" 
-                            type="text" 
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && searchTerm.trim()) {
-                                    navigate(`/discovery/${encodeURIComponent(searchTerm.trim())}`);
-                                }
-                            }}
-                        />
+
+            <main className="max-w-7xl mx-auto px-[20px] pt-4 md:pt-6 relative z-10">
+                {/* Search Bar Section */}
+                <div className="mb-6 relative z-40 transform transition-all hover:scale-[1.01] duration-300">
+                    <div className="relative w-full max-w-2xl mx-auto group">
+                        <div className="relative bg-white/90 backdrop-blur-md rounded-full border border-slate-200 shadow-sm flex items-center overflow-hidden transition-all">
+                            <span className="material-symbols-outlined pl-6 text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300">search</span>
+                            <input 
+                                ref={searchInputRef}
+                                className="w-full pl-3 pr-6 py-4 md:py-5 bg-transparent border-none outline-none ring-0 shadow-none appearance-none focus:ring-0 focus:outline-none focus:border-none text-[15px] text-slate-800 placeholder-slate-400 font-medium" 
+                                placeholder="What service do you need today?" 
+                                type="text"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && searchTerm.trim()) {
+                                        handleServiceClick(searchTerm.trim());
+                                    }
+                                }}
+                            />
+                        </div>
+                        
+                        {/* Dropdown Results - Glassmorphic */}
                         {searchTerm && (
-                            <div className="absolute top-full mt-2 w-full bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden z-50 animate-fade-in">
+                            <div className="absolute top-[calc(100%+12px)] left-0 w-full bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white overflow-hidden z-50 animate-fade-in origin-top transition-all">
                                 {filteredServices.length > 0 ? (
-                                    filteredServices.map((service, index) => (
-                                        <div 
-                                            key={index} 
-                                            onClick={() => handleServiceClick(service.name)}
-                                            className="px-5 py-3.5 flex items-center gap-4 hover:bg-blue-50 cursor-pointer transition-colors border-b border-slate-50 last:border-0"
-                                        >
-                                            <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-100 flex-shrink-0">
-                                                <img src={service.img} alt={service.name} className="w-full h-full object-cover" />
+                                    <div className="max-h-[350px] overflow-y-auto custom-scrollbar">
+                                        {filteredServices.map((service, index) => (
+                                            <div 
+                                                key={index} 
+                                                onClick={() => handleServiceClick(service.name)}
+                                                className="px-6 py-4 flex items-center gap-5 hover:bg-blue-50/80 cursor-pointer transition-all duration-200 border-b border-slate-100/50 last:border-0 group/item"
+                                            >
+                                                <div className="w-12 h-12 rounded-xl overflow-hidden bg-transparent  flex-shrink-0 shadow-sm group-hover/item:shadow-md group-hover/item:scale-105 transition-all">
+                                                    <img src={service.img} alt={service.name} className="w-full h-full object-cover" />
+                                                </div>
+                                                <span className="text-[15px] font-bold text-slate-700 group-hover/item:text-blue-700 transition-colors">{service.name}</span>
+                                                <span className="material-symbols-outlined ml-auto text-slate-300 opacity-0 -translate-x-4 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300 group-hover/item:text-blue-500">arrow_forward</span>
                                             </div>
-                                            <span className="text-[15px] font-bold text-slate-700">{service.name}</span>
-                                        </div>
-                                    ))
+                                        ))}
+                                    </div>
                                 ) : (
-                                    <div className="px-5 py-4 text-[14px] text-slate-500 text-center font-medium">
+                                    <div className="px-6 py-8 text-[14px] text-slate-500 text-center font-medium flex flex-col items-center gap-2">
+                                        <span className="material-symbols-outlined text-[32px] text-slate-300">search_off</span>
                                         No services found for "{searchTerm}"
                                     </div>
                                 )}
                             </div>
                         )}
                     </div>
-                </section>
-                
+                </div>
 
-                {/* Hero Section */}
-                <section className="pt-8 pb-8 md:pt-12 md:pb-12 px-4 md:px-8">
-                    <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-10 bg-white/60 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200/60">
-                        <div className="flex-1 space-y-4">
-                            <span className="inline-block bg-blue-50 text-primary px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">Professional Maintenance</span>
-                            <h1 className="text-2xl md:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">Electrical Appliance Services</h1>
-                            <p className="text-[15px] text-slate-500 max-w-xl leading-relaxed">Expert diagnostics and precision repairs for industrial and residential electrical systems. Keep your facility running at peak efficiency.</p>
-                        </div>
-                        <div className="flex-1 w-full max-w-lg">
-                            <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-video bg-slate-100 group">
-                                {slideImages.map((src, index) => (
+                {/* Main Content Glass Card */}
+                <div className="bg-white/60 backdrop-blur-2xl rounded-[1.5rem] p-4 md:p-6 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-white/80 mb-6 relative z-20">
+                    
+                    {/* Header Info */}
+                    <div className="mb-4 text-center md:text-left">
+                        <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 font-bold text-[11px] px-4 py-1.5 rounded-full mb-4 shadow-sm border border-blue-200/50">
+                            <span className="material-symbols-outlined text-[13px]">verified</span>
+                            PROFESSIONAL MAINTENANCE
+                        </span>
+                        <h1 className="text-2xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight drop-shadow-sm">Electrical Appliance Services</h1>
+                        <p className="text-[15px] md:text-[16px] text-slate-600 max-w-3xl leading-relaxed mx-auto md:mx-0">Expert diagnostics and precision repairs for industrial and residential electrical systems. Keep your facility running at peak efficiency with our certified technicians.</p>
+                    </div>
+
+                    {/* Image Slider */}
+                    <div className="relative rounded-[1rem] overflow-hidden mb-6 shadow-sm group border border-white/50 bg-transparent /50">
+                        <div className="flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+                            {slideImages.map((src, index) => (
+                                <div key={index} className="w-full flex-shrink-0 relative flex items-center justify-center p-2">
                                     <img 
-                                        key={index}
                                         alt={`Slide ${index + 1}`} 
-                                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:scale-105 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`} 
-                                        src={src} 
+                                        className="w-full h-40 md:h-[280px] object-contain hover:scale-105 transition-transform duration-700" 
+                                        src={src}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=1200&q=80';
+                                        }}
                                     />
-                                ))}
-                            </div>
+                                    {/* Subtle Gradient Overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent pointer-events-none rounded-[1.5rem]"></div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        {/* Elegant Slider Controls */}
+                        <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md p-3 rounded-full shadow-lg text-blue-600 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 hover:bg-white hover:scale-110 transition-all duration-300">
+                            <span className="material-symbols-outlined text-[24px]">chevron_left</span>
+                        </button>
+                        <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md p-3 rounded-full shadow-lg text-blue-600 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 hover:bg-white hover:scale-110 transition-all duration-300">
+                            <span className="material-symbols-outlined text-[24px]">chevron_right</span>
+                        </button>
+                        
+                        {/* Modern Dots */}
+                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 bg-white/30 backdrop-blur-md px-4 py-2 rounded-full">
+                            {slideImages.map((_, index) => (
+                                <div 
+                                    key={index} 
+                                    onClick={() => setCurrentSlide(index)} 
+                                    className={`h-2 rounded-full cursor-pointer transition-all duration-300 shadow-sm ${index === currentSlide ? 'w-6 bg-blue-600' : 'w-2 bg-white/80 hover:bg-white'}`}
+                                ></div>
+                            ))}
                         </div>
                     </div>
-                </section>
-            </main>
-            
-            {/* Footer */}
-            <footer className="bg-white/50 backdrop-blur-md border-t border-slate-200 mt-auto animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                <div className="w-full px-4 md:px-8 py-8 md:py-12 flex flex-col md:flex-row justify-between items-center max-w-[1400px] mx-auto gap-6">
-                    <div className="flex flex-col items-center md:items-start gap-2">
-                        <div className="text-2xl font-black text-primary">RepairHub</div>
-                        <p className="text-slate-500 text-sm">Industrial-grade maintenance you can trust.</p>
-                    </div>
 
-                    <div className="text-slate-400 text-sm text-center md:text-right">
-                        © 2024 RepairHub. All rights reserved.
+
+                </div>
+
+                {/* Services Included Section (Separated) */}
+                <div className="mb-12 relative z-20">
+                    <h2 className="text-2xl font-extrabold text-slate-800 mb-6 flex items-center justify-center md:justify-start gap-2">
+                        <span className="material-symbols-outlined text-blue-500 text-[28px]">list_alt</span>
+                        Services Included
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        
+                        {/* Card 1 */}
+                        <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-white shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-300 group">
+                            <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:shadow-md transition-all duration-300 border border-blue-200/50">
+                                <span className="material-symbols-outlined text-[24px]">home</span>
+                            </div>
+                            <h3 className="text-[16px] font-bold text-slate-800 mb-2">Residential Diagnostics</h3>
+                            <p className="text-[13px] text-slate-500 leading-relaxed">Comprehensive home electrical system checks and advanced safety audits.</p>
+                        </div>
+
+                        {/* Card 2 */}
+                        <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-white shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-300 group">
+                            <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:shadow-md transition-all duration-300 border border-indigo-200/50">
+                                <span className="material-symbols-outlined text-[24px]">factory</span>
+                            </div>
+                            <h3 className="text-[16px] font-bold text-slate-800 mb-2">Industrial Maintenance</h3>
+                            <p className="text-[13px] text-slate-500 leading-relaxed">Routine upkeep and precision fault finding for heavy machinery systems.</p>
+                        </div>
+
+                        {/* Card 3 */}
+                        <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-white shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-300 group">
+                            <div className="w-12 h-12 bg-gradient-to-br from-rose-100 to-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:shadow-md transition-all duration-300 border border-rose-200/50">
+                                <span className="material-symbols-outlined text-[24px]">warning</span>
+                            </div>
+                            <h3 className="text-[16px] font-bold text-slate-800 mb-2">Emergency Repairs</h3>
+                            <p className="text-[13px] text-slate-500 leading-relaxed">24/7 rapid priority response for critical electrical failures and hazards.</p>
+                        </div>
+                    </div>
+                    
+                    {/* CTA Button Moved to Bottom */}
+                    <div className="mt-10 flex justify-center w-full">
+                        <button 
+                            onClick={handleBookNowClick} 
+                            className="w-full md:w-auto relative group overflow-hidden bg-slate-900 text-white font-bold text-[16px] py-4 px-12 rounded-2xl shadow-[0_10px_20px_rgba(15,23,42,0.2)] hover:shadow-[0_15px_30px_rgba(15,23,42,0.3)] hover:-translate-y-1 transition-all duration-300"
+                        >
+                            <span className="relative flex items-center gap-2 justify-center z-10">
+                                Book Service Now
+                                <span className="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                            </span>
+                        </button>
                     </div>
                 </div>
-            </footer>
+
+            </main>
+
             <AIFloatingWidget />
         </div>
     );
 };
 
 export default StartingPage;
+

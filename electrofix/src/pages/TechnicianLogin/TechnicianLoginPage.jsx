@@ -27,7 +27,7 @@ const TechnicianLoginPage = () => {
             localStorage.setItem('technicianId', localUser.id || '');
             setIsSubmitting(false);
             if (localUser.id) {
-                navigate(`/technician-dashboard`);
+                navigate(`/profile/${localUser.id}`);
             } else {
                 navigate('/');
             }
@@ -38,7 +38,7 @@ const TechnicianLoginPage = () => {
     };
 
     return (
-        <div className="bg-background text-slate-900 min-h-screen flex flex-col relative overflow-hidden login-page-wrapper">
+        <div className="bg-transparent  text-slate-900 min-h-screen flex flex-col relative overflow-hidden login-page-wrapper">
             {/* Background decorative elements */}
             <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
@@ -178,3 +178,4 @@ const TechnicianLoginPage = () => {
 };
 
 export default TechnicianLoginPage;
+

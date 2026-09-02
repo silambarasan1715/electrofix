@@ -88,7 +88,7 @@ const SignupPage = () => {
     };
 
     return (
-        <div className="bg-background text-slate-900 min-h-screen flex flex-col relative overflow-hidden font-body-md">
+        <div className="bg-transparent  text-slate-900 min-h-screen flex flex-col relative overflow-hidden font-body-md">
             {/* Background decorative elements */}
             <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
@@ -168,7 +168,7 @@ const SignupPage = () => {
                                         {filteredDistricts.map((district, index) => (
                                             <div 
                                                 key={index}
-                                                className="px-4 py-3 hover:bg-slate-50 cursor-pointer text-[14px] font-medium text-slate-700"
+                                                className="px-4 py-3 hover:bg-transparent  cursor-pointer text-[14px] font-medium text-slate-700"
                                                 onClick={() => handleSuggestionClick(district)}
                                             >
                                                 {district}
@@ -284,3 +284,4 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
+

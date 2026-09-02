@@ -121,7 +121,7 @@ const BookServicePage = () => {
 
     if (!technician) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-background text-slate-900">
+            <div className="flex flex-col items-center justify-center min-h-screen bg-transparent  text-slate-900">
                 <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
             </div>
         );
@@ -133,7 +133,7 @@ const BookServicePage = () => {
     const totalCost = baseCharge + warrantyCost;
 
     return (
-        <div className="bg-background text-slate-900 flex flex-col min-h-screen antialiased font-body-md relative overflow-hidden">
+        <div className="bg-transparent  text-slate-900 flex flex-col min-h-screen antialiased font-body-md relative overflow-hidden">
             {/* Background elements */}
             <div className="fixed top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
             <div className="fixed bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
@@ -158,29 +158,29 @@ const BookServicePage = () => {
                 </button>
             </nav>
 
-            <main className="flex-grow pt-28 pb-16 px-6 md:px-10 w-full max-w-3xl mx-auto flex flex-col relative z-10">
+            <main className="flex-grow pt-24 pb-10 px-4 md:px-6 w-full max-w-2xl mx-auto flex flex-col relative z-10">
                 
                 {/* Booking Form */}
-                <div className="bg-white/70 backdrop-blur-md rounded-3xl border border-white/50 p-8 md:p-10 shadow-xl animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                    <h2 className="text-[24px] font-extrabold text-slate-900 mb-8 flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary">
-                            <span className="material-symbols-outlined text-[24px]" style={{fontVariationSettings: "'FILL' 1"}}>edit_document</span>
+                <div className="bg-white/70 backdrop-blur-md rounded-2xl border border-white/50 p-5 md:p-6 shadow-xl animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                    <h2 className="text-[20px] font-extrabold text-slate-900 mb-6 flex items-center gap-2">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary">
+                            <span className="material-symbols-outlined text-[20px]" style={{fontVariationSettings: "'FILL' 1"}}>edit_document</span>
                         </div>
                         Service Details
                     </h2>
                     
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                         
                         {/* Issue Description */}
-                        <div className="flex flex-col gap-2">
-                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-2 mb-1">
-                                <label className="text-[13px] font-bold text-slate-500 uppercase tracking-wider block">Describe your issue</label>
+                        <div className="flex flex-col gap-1.5">
+                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-2 mb-0.5">
+                                <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block">Describe your issue</label>
                                 <button 
                                     type="button" 
                                     onClick={handleAIPredict} 
-                                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-bold text-[12px] shadow-sm hover:shadow-md transition-all hover:scale-105 active:scale-95"
+                                    className="flex items-center justify-center gap-1.5 px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-bold text-[11px] shadow-sm hover:shadow-md transition-all hover:scale-105 active:scale-95"
                                 >
-                                    <span className="material-symbols-outlined text-[16px]">
+                                    <span className="material-symbols-outlined text-[14px]">
                                         auto_awesome
                                     </span>
                                     Predict Issue with AI
@@ -191,32 +191,32 @@ const BookServicePage = () => {
                                 value={issue}
                                 onChange={(e) => setIssue(e.target.value)}
                                 placeholder="E.g., My AC is not cooling properly and makes a loud noise..."
-                                className={`w-full min-h-[140px] p-5 bg-white/50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[15px] font-medium text-slate-900 resize-y outline-none shadow-sm placeholder:text-slate-400 ${isPredicting ? 'animate-pulse' : ''}`}
+                                className={`w-full min-h-[100px] p-3.5 bg-white/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] font-medium text-slate-900 resize-y outline-none shadow-sm placeholder:text-slate-400 ${isPredicting ? 'animate-pulse' : ''}`}
                             ></textarea>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             {/* Preferred Date */}
-                            <div className="flex flex-col gap-2">
-                                <label className="text-[13px] font-bold text-slate-500 uppercase tracking-wider block">Preferred Service Date</label>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block">Preferred Service Date</label>
                                 <div className="relative group">
-                                    <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-[20px] pointer-events-none">calendar_month</span>
+                                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-[18px] pointer-events-none">calendar_month</span>
                                     <input 
                                         required
                                         type="date"
                                         min={today}
                                         value={preferredDate}
                                         onChange={(e) => setPreferredDate(e.target.value)}
-                                        className="w-full pl-12 pr-5 py-4 bg-white/50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[15px] font-medium text-slate-900 outline-none shadow-sm cursor-pointer"
+                                        className="w-full pl-10 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] font-medium text-slate-900 outline-none shadow-sm cursor-pointer"
                                     />
                                 </div>
                             </div>
 
                             {/* Address */}
-                            <div className="flex flex-col gap-2">
-                                <label className="text-[13px] font-bold text-slate-500 uppercase tracking-wider block">Service Location (Address)</label>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block">Service Location (Address)</label>
                                 <div className="relative group">
-                                    <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-[20px] pointer-events-none">location_on</span>
+                                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors text-[18px] pointer-events-none">location_on</span>
                                     <input 
                                         required
                                         type="text"
@@ -240,10 +240,10 @@ const BookServicePage = () => {
                                             setTimeout(() => setShowSuggestions(false), 200);
                                         }}
                                         placeholder="Enter city (e.g. Villupuram)"
-                                        className="w-full pl-12 pr-5 py-4 bg-white/50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[15px] font-medium text-slate-900 outline-none shadow-sm placeholder:text-slate-400"
+                                        className="w-full pl-10 pr-4 py-3 bg-white/50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[14px] font-medium text-slate-900 outline-none shadow-sm placeholder:text-slate-400"
                                     />
                                     {showSuggestions && filteredLocations.length > 0 && (
-                                        <div className="absolute top-full left-0 w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-lg z-50 overflow-hidden max-h-48 overflow-y-auto">
+                                        <div className="absolute top-full left-0 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 overflow-hidden max-h-40 overflow-y-auto">
                                             {filteredLocations.map((loc, index) => (
                                                 <div 
                                                     key={index}
@@ -251,7 +251,7 @@ const BookServicePage = () => {
                                                         setAddress(loc);
                                                         setShowSuggestions(false);
                                                     }}
-                                                    className="px-4 py-3 hover:bg-blue-50 cursor-pointer text-[14px] text-slate-700 font-medium border-b border-slate-50 last:border-0 transition-colors"
+                                                    className="px-3 py-2 hover:bg-blue-50 cursor-pointer text-[13px] text-slate-700 font-medium border-b border-slate-50 last:border-0 transition-colors"
                                                 >
                                                     {loc}
                                                 </div>
@@ -263,12 +263,12 @@ const BookServicePage = () => {
                         </div>
 
                         {/* Warranty Option */}
-                        <div className="flex flex-col gap-3 mt-4 pt-8 border-t border-slate-200/60">
-                            <label className="text-[15px] font-extrabold text-slate-900">Warranty Option</label>
+                        <div className="flex flex-col gap-2 mt-2 pt-5 border-t border-slate-200/60">
+                            <label className="text-[14px] font-extrabold text-slate-900">Warranty Option</label>
                             
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {/* Standard Warranty */}
-                                <label className={`relative flex flex-col p-6 cursor-pointer rounded-2xl border-2 transition-all hover-lift ${warranty === 'standard' ? 'border-primary bg-blue-50/50 shadow-md' : 'border-slate-200 bg-white/50 hover:bg-white hover:border-slate-300 shadow-sm'}`}>
+                                <label className={`relative flex flex-col p-4 cursor-pointer rounded-xl border-2 transition-all hover-lift ${warranty === 'standard' ? 'border-primary bg-blue-50/50 shadow-md' : 'border-slate-200 bg-white/50 hover:bg-white hover:border-slate-300 shadow-sm'}`}>
                                     <input 
                                         type="radio" 
                                         name="warranty" 
@@ -277,15 +277,15 @@ const BookServicePage = () => {
                                         onChange={() => setWarranty('standard')}
                                         className="sr-only"
                                     />
-                                    <div className="flex justify-between items-center mb-2">
-                                        <span className="text-[16px] font-extrabold text-slate-900 tracking-tight">Standard</span>
-                                        <span className="text-[13px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg uppercase tracking-wider">Free</span>
+                                    <div className="flex justify-between items-center mb-1">
+                                        <span className="text-[14px] font-extrabold text-slate-900 tracking-tight">Standard</span>
+                                        <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded uppercase tracking-wider">Free</span>
                                     </div>
-                                    <span className="text-[13px] font-medium text-slate-500">30-day service guarantee</span>
+                                    <span className="text-[12px] font-medium text-slate-500">30-day service guarantee</span>
                                 </label>
 
                                 {/* Extended Warranty */}
-                                <label className={`relative flex flex-col p-6 cursor-pointer rounded-2xl border-2 transition-all hover-lift ${warranty === 'extended' ? 'border-primary bg-blue-50/50 shadow-md' : 'border-slate-200 bg-white/50 hover:bg-white hover:border-slate-300 shadow-sm'}`}>
+                                <label className={`relative flex flex-col p-4 cursor-pointer rounded-xl border-2 transition-all hover-lift ${warranty === 'extended' ? 'border-primary bg-blue-50/50 shadow-md' : 'border-slate-200 bg-white/50 hover:bg-white hover:border-slate-300 shadow-sm'}`}>
                                     <input 
                                         type="radio" 
                                         name="warranty" 
@@ -294,26 +294,26 @@ const BookServicePage = () => {
                                         onChange={() => setWarranty('extended')}
                                         className="sr-only"
                                     />
-                                    <div className="flex justify-between items-center mb-2">
-                                        <span className="text-[16px] font-extrabold text-slate-900 tracking-tight">Extended</span>
-                                        <span className="text-[14px] font-bold text-primary">₹499</span>
+                                    <div className="flex justify-between items-center mb-1">
+                                        <span className="text-[14px] font-extrabold text-slate-900 tracking-tight">Extended</span>
+                                        <span className="text-[13px] font-bold text-primary">₹499</span>
                                     </div>
-                                    <span className="text-[13px] font-medium text-slate-500">6-month complete protection</span>
+                                    <span className="text-[12px] font-medium text-slate-500">6-month complete protection</span>
                                 </label>
                             </div>
                         </div>
 
                         {/* Submit Button */}
-                        <div className="mt-4 pt-8 border-t border-slate-200/60">
+                        <div className="mt-2 pt-5 border-t border-slate-200/60">
                             <button 
                                 type="submit"
                                 disabled={isSubmitting || !issue || !preferredDate || !address}
-                                className="w-full bg-primary text-white font-bold text-[16px] py-4 rounded-xl shadow-lg hover:bg-primary-hover hover-lift transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover-lift-none focus:outline-none"
+                                className="w-full bg-primary text-white font-bold text-[14px] py-3 rounded-lg shadow-md hover:bg-primary-hover hover-lift transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover-lift-none focus:outline-none"
                             >
                                 {isSubmitting ? (
-                                    <span className="material-symbols-outlined text-[24px] animate-spin">refresh</span>
+                                    <span className="material-symbols-outlined text-[20px] animate-spin">refresh</span>
                                 ) : (
-                                    <span className="material-symbols-outlined text-[24px]" style={{fontVariationSettings: "'FILL' 1"}}>event_available</span>
+                                    <span className="material-symbols-outlined text-[20px]" style={{fontVariationSettings: "'FILL' 1"}}>event_available</span>
                                 )}
                                 {isSubmitting ? 'Confirming...' : 'Confirm Booking'}
                             </button>
@@ -334,3 +334,4 @@ const BookServicePage = () => {
 };
 
 export default BookServicePage;
+

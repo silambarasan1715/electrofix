@@ -7,10 +7,73 @@ import { categories, skillPool } from '../../data/dummyTechnicians';
 
 const TechnicianRegistrationPage = () => {
     const navigate = useNavigate();
-    const { personalDetails, updatePersonalDetails } = useContext(RegistrationContext);
+    const { personalDetails, updatePersonalDetails, verificationDetails, updateVerificationDetails, addTechnicianToDirectory } = useContext(RegistrationContext);
     
     const [currentStep, setCurrentStep] = useState(1);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    
+    const [aadhaarNumber, setAadhaarNumber] = useState(verificationDetails.aadhaar || '');
+    const [otpSent, setOtpSent] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [otpValues, setOtpValues] = useState(['', '', '', '', '', '']);
+    const [otpVerified, setOtpVerified] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(120);
+    const [isTimerActive, setIsTimerActive] = useState(false);
+    const [panFile, setPanFile] = useState(verificationDetails.panFile || null);
+
+    useEffect(() => {
+        let interval;
+        if (isTimerActive && timeLeft > 0) {
+            interval = setInterval(() => {
+                setTimeLeft((prev) => prev - 1);
+            }, 1000);
+        } else if (timeLeft === 0) {
+            setIsTimerActive(false);
+            clearInterval(interval);
+        }
+        return () => clearInterval(interval);
+    }, [isTimerActive, timeLeft]);
+
+    const formatTime = (seconds) => {
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    };
+
+    const handleSendOtp = () => {
+        if (aadhaarNumber.length === 12) {
+            setOtpSent(true);
+            setIsTimerActive(true);
+            setTimeLeft(120);
+            setShowSuccess(true);
+            setTimeout(() => setShowSuccess(false), 4000);
+            alert("System Note (Testing): An OTP '123456' has been sent to the registered mobile number.");
+        } else {
+            alert("Please enter a valid 12-digit Aadhaar number.");
+        }
+    };
+
+    const handleOtpChange = (index, value) => {
+        if (!/^\d*$/.test(value)) return;
+        const newOtp = [...otpValues];
+        newOtp[index] = value;
+        setOtpValues(newOtp);
+        if (value && index < 5) {
+            const nextInput = document.getElementById(`otp-${index + 1}`);
+            if (nextInput) nextInput.focus();
+        }
+    };
+    
+    const verifyOtp = () => {
+        if (otpValues.join('') === '123456') {
+            setOtpVerified(true);
+            setIsTimerActive(false);
+        } else {
+            alert('Invalid OTP. Please enter 123456 (testing code).');
+        }
+    };
+
+    const isOtpComplete = otpValues.every(val => val !== '');
     
     const initialCountryCode = personalDetails.phoneCode 
         ? (countryCodes.find(c => c.code === personalDetails.phoneCode) || countryCodes.find(c => c.iso === 'in')) 
@@ -100,6 +163,8 @@ const TechnicianRegistrationPage = () => {
         const password = formData.get('password');
         const confirmPassword = formData.get('confirmPassword');
         
+        // Bypassing validation for testing purposes
+        /*
         const requiredFields = ['fullName', 'email', 'password', 'phone', 'address', 'country', 'state', 'city', 'zip', 'technicianType', 'experienceYears'];
         for (let field of requiredFields) {
             if (!formData.get(field)) {
@@ -112,26 +177,39 @@ const TechnicianRegistrationPage = () => {
             alert('Passwords do not match!');
             return;
         }
+        */
 
-        updatePersonalDetails({
-            fullName: formData.get('fullName'),
+        if (!otpVerified) {
+            alert("Please verify your Aadhaar number with the OTP before continuing.");
+            return;
+        }
+
+        const newTechnician = {
+            id: `tech${Date.now()}`,
+            name: formData.get('fullName'),
             email: formData.get('email'),
             password: password,
-            phoneCode: selectedCountry.code,
-            phone: formData.get('phone'),
-            address: formData.get('address'),
-            country: addressCountry,
-            state: addressState,
-            city: addressCity,
-            zip: formData.get('zip'),
-            technicianType: formData.get('technicianType'),
-            experienceYears: formData.get('experienceYears'),
-            skills: formData.get('skills'),
-            profilePhoto: profilePhoto,
-            logo: logo
-        });
+            type: formData.get('technicianType'),
+            experience: formData.get('experienceYears'),
+            phone: `${selectedCountry.code}${formData.get('phone')}`,
+            address: `${formData.get('address')}, ${addressCity}, ${addressState}, ${addressCountry}`,
+            skills: selectedSkills,
+            about: "Experienced professional dedicated to quality service.",
+            rating: 5.0,
+            reviews: 0,
+            completedJobs: 0,
+            avatar: profilePhoto ? URL.createObjectURL(profilePhoto) : "https://i.pravatar.cc/150?img=11",
+            status: "Available"
+        };
+        
+        const registered = JSON.parse(localStorage.getItem('registeredTechnicians') || '[]');
+        localStorage.setItem('registeredTechnicians', JSON.stringify([...registered, newTechnician]));
+        
+        if (addTechnicianToDirectory) {
+            addTechnicianToDirectory(newTechnician);
+        }
 
-        navigate('/technician-verification');
+        navigate('/technician-login');
     };
 
     const inputClass = "w-full bg-white/50 border border-slate-200 rounded-lg px-4 py-2.5 text-[13px] font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm";
@@ -141,7 +219,7 @@ const TechnicianRegistrationPage = () => {
     const cardClass = "bg-white/70 backdrop-blur-md border border-white/50 rounded-2xl p-6 shadow-md";
 
     return (
-        <div className="bg-background text-slate-900 font-body-md min-h-screen flex flex-col relative overflow-hidden">
+        <div className="bg-transparent  text-slate-900 font-body-md min-h-screen flex flex-col relative overflow-hidden">
             {/* Background elements */}
             <div className="fixed top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
             <div className="fixed bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
@@ -173,20 +251,13 @@ const TechnicianRegistrationPage = () => {
                             </div>
                             Registration Details
                         </a>
-                        {/* Inactive Steps */}
-                        <Link to="/technician-verification" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-100/50 hover:text-primary transition-all rounded-lg font-bold text-[13px] cursor-pointer">
-                            <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center">
-                                <span className="material-symbols-outlined text-[16px]">fingerprint</span>
-                            </div>
-                            Identity Verification
-                        </Link>
-                        <Link to="/technician-certification" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-100/50 hover:text-primary transition-all rounded-lg font-bold text-[13px] cursor-pointer">
+                        <Link to="/technician-certification" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-transparent /50 hover:text-primary transition-all rounded-lg font-bold text-[13px] cursor-pointer">
                             <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center">
                                 <span className="material-symbols-outlined text-[16px]">verified</span>
                             </div>
                             Certifications
                         </Link>
-                        <a className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-100/50 hover:text-primary transition-all rounded-lg font-bold text-[13px] cursor-pointer" href="#">
+                        <a className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-transparent /50 hover:text-primary transition-all rounded-lg font-bold text-[13px] cursor-pointer" href="#">
                             <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center">
                                 <span className="material-symbols-outlined text-[16px]">assignment_turned_in</span>
                             </div>
@@ -222,7 +293,7 @@ const TechnicianRegistrationPage = () => {
                         </div>
                         
                         {/* Form */}
-                        <form className="flex flex-col gap-6" onSubmit={handleNext}>
+                        <form className="flex flex-col gap-6" onSubmit={handleNext} noValidate>
                             
                             {/* Card 1: Professional Details */}
                             <div className={`${cardClass} ${currentStep === 1 ? 'block' : 'hidden'}`}>
@@ -287,7 +358,7 @@ const TechnicianRegistrationPage = () => {
                                                         {countryCodes.map((country, index) => (
                                                             <div 
                                                                 key={index} 
-                                                                className="flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors"
+                                                                className="flex items-center gap-2 px-3 py-2 hover:bg-transparent  rounded-lg cursor-pointer transition-colors"
                                                                 onClick={() => {
                                                                     setSelectedCountry(country);
                                                                     setIsDropdownOpen(false);
@@ -473,7 +544,7 @@ const TechnicianRegistrationPage = () => {
                                                     {filteredSkills.map(skill => (
                                                         <li 
                                                             key={skill}
-                                                            className="px-3 py-2 hover:bg-slate-50 rounded-lg cursor-pointer font-medium text-[12px] text-slate-700 transition-colors"
+                                                            className="px-3 py-2 hover:bg-transparent  rounded-lg cursor-pointer font-medium text-[12px] text-slate-700 transition-colors"
                                                             onClick={() => addSkill(skill)}
                                                         >
                                                             {skill}
@@ -486,16 +557,103 @@ const TechnicianRegistrationPage = () => {
                                     
                                     <div className="col-span-1 md:col-span-2">
                                         <label className={labelClass}>Profile Photo (Verification)</label>
-                                        <label className="flex items-center justify-center w-full h-[50px] bg-white/50 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:bg-slate-50 hover:border-primary transition-all overflow-hidden relative group">
+                                        <label className="flex items-center justify-center w-full h-[50px] bg-white/50 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:bg-transparent  hover:border-primary transition-all overflow-hidden relative group">
                                             <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" onChange={(e) => setProfilePhoto(e.target.files[0])} />
                                             <span className={`material-symbols-outlined mr-2 text-[20px] ${profilePhoto ? 'text-emerald-500' : 'text-slate-400 group-hover:text-primary transition-colors'}`}>
                                                 {profilePhoto ? 'check_circle' : 'add_a_photo'}
                                             </span>
                                             <span className={`font-bold text-[13px] truncate px-2 ${profilePhoto ? 'text-slate-800' : 'text-slate-500 group-hover:text-primary transition-colors'}`}>
-                                                {profilePhoto ? profilePhoto.name : 'Upload Photo'}
+                                                                {profilePhoto ? profilePhoto.name : 'Upload Photo'}
                                             </span>
                                         </label>
                                     </div>
+                                </div>
+
+                                {/* Aadhaar & PAN Section */}
+                                <div className="space-y-4 pt-6 mt-6 border-t border-slate-200/60">
+                                    <h3 className={sectionTitleClass}>Identity Verification</h3>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div className="space-y-2">
+                                            <label className={labelClass}>12-Digit Aadhaar Number</label>
+                                            <input 
+                                                className={inputClass}
+                                                type="text" 
+                                                maxLength="12"
+                                                value={aadhaarNumber}
+                                                onChange={(e) => setAadhaarNumber(e.target.value.replace(/\D/g, ''))}
+                                            />
+                                        </div>
+                                        <div className="space-y-2 flex flex-col justify-end">
+                                            {(!otpSent || !isTimerActive) ? (
+                                                <button 
+                                                    className="w-full md:w-auto px-6 py-2.5 bg-slate-900 text-white font-bold text-[13px] rounded-lg hover:bg-slate-800 transition-all shadow-md hover-lift" 
+                                                    type="button"
+                                                    onClick={handleSendOtp}
+                                                >
+                                                    {otpSent ? "Resend OTP" : "Send OTP"}
+                                                </button>
+                                            ) : (
+                                                <button 
+                                                    className="w-full md:w-auto px-6 py-2.5 bg-slate-200 text-slate-500 font-bold text-[13px] rounded-lg cursor-not-allowed opacity-80" 
+                                                    type="button"
+                                                    disabled
+                                                >
+                                                    Resend in {formatTime(timeLeft)}
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {showSuccess && (
+                                        <div className="mt-4 flex items-center gap-3 text-emerald-700 bg-emerald-50/80 backdrop-blur-sm p-3 rounded-xl border border-emerald-200 shadow-sm animate-fade-in-up">
+                                            <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                                            <span className="text-[13px] font-bold">OTP sent to verified mobile number</span>
+                                        </div>
+                                    )}
+                                    
+                                    {/* OTP Field */}
+                                    {otpSent && !otpVerified && (
+                                        <div className="mt-5 p-5 bg-blue-50/50 border border-blue-100 rounded-xl animate-fade-in-up">
+                                            <label className="text-[13px] font-bold text-slate-700 block mb-3">Enter OTP sent to registered mobile</label>
+                                            <div className="flex justify-between gap-1 sm:gap-2 mb-3">
+                                                {otpValues.map((val, index) => (
+                                                    <input 
+                                                        key={index}
+                                                        id={`otp-${index}`}
+                                                        className="w-10 h-10 sm:w-12 sm:h-12 text-center text-lg font-extrabold bg-white border border-slate-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none shadow-sm" 
+                                                        maxLength="1" 
+                                                        type="text" 
+                                                        value={val}
+                                                        onChange={(e) => handleOtpChange(index, e.target.value)}
+                                                    />
+                                                ))}
+                                            </div>
+                                            <div className="flex items-center justify-between mt-2">
+                                                <p className="text-[12px] font-bold text-slate-500 flex items-center gap-1">
+                                                    <span className="material-symbols-outlined text-[14px]">timer</span> {formatTime(timeLeft)} remaining
+                                                </p>
+                                                {isOtpComplete && (
+                                                    <button 
+                                                        type="button" 
+                                                        onClick={verifyOtp}
+                                                        className="px-5 py-2 bg-primary text-white font-bold text-[13px] rounded-lg hover:bg-primary-hover shadow-md hover-lift transition-all flex items-center gap-2"
+                                                    >
+                                                        Verify <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                    {otpVerified && (
+                                        <div className="mt-5 p-4 bg-emerald-50/80 backdrop-blur-sm border border-emerald-200 rounded-xl flex items-center gap-3 text-emerald-700 shadow-sm animate-fade-in-up">
+                                            <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                                                <span className="material-symbols-outlined text-[16px]">verified_user</span>
+                                            </div>
+                                            <span className="text-[14px] font-bold">OTP Verified Successfully</span>
+                                        </div>
+                                    )}
+
                                 </div>
                             </div>
 
@@ -503,7 +661,7 @@ const TechnicianRegistrationPage = () => {
                             <div className="flex flex-col-reverse md:flex-row justify-end items-center gap-3 pt-4">
                                 {currentStep === 1 && (
                                     <>
-                                        <Link to="/" className="w-full md:w-auto px-6 py-2.5 bg-white text-slate-700 border border-slate-300 font-bold text-[13px] rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-all text-center shadow-sm">
+                                        <Link to="/" className="w-full md:w-auto px-6 py-2.5 bg-white text-slate-700 border border-slate-300 font-bold text-[13px] rounded-lg hover:bg-transparent  hover:text-slate-900 transition-all text-center shadow-sm">
                                             Cancel
                                         </Link>
                                         <button type="button" onClick={() => setCurrentStep(2)} className="w-full md:w-auto px-6 py-2.5 bg-primary text-white font-bold text-[13px] rounded-lg hover:bg-primary-hover shadow-md hover-lift transition-all flex justify-center items-center gap-2">
@@ -515,7 +673,7 @@ const TechnicianRegistrationPage = () => {
                                 
                                 {currentStep === 2 && (
                                     <>
-                                        <button type="button" onClick={() => setCurrentStep(1)} className="w-full md:w-auto px-6 py-2.5 bg-white text-slate-700 border border-slate-300 font-bold text-[13px] rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-all text-center shadow-sm flex justify-center items-center gap-2">
+                                        <button type="button" onClick={() => setCurrentStep(1)} className="w-full md:w-auto px-6 py-2.5 bg-white text-slate-700 border border-slate-300 font-bold text-[13px] rounded-lg hover:bg-transparent  hover:text-slate-900 transition-all text-center shadow-sm flex justify-center items-center gap-2">
                                             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
                                             Back
                                         </button>
@@ -528,13 +686,13 @@ const TechnicianRegistrationPage = () => {
 
                                 {currentStep === 3 && (
                                     <>
-                                        <button type="button" onClick={() => setCurrentStep(2)} className="w-full md:w-auto px-6 py-2.5 bg-white text-slate-700 border border-slate-300 font-bold text-[13px] rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-all text-center shadow-sm flex justify-center items-center gap-2">
+                                        <button type="button" onClick={() => setCurrentStep(2)} className="w-full md:w-auto px-6 py-2.5 bg-white text-slate-700 border border-slate-300 font-bold text-[13px] rounded-lg hover:bg-transparent  hover:text-slate-900 transition-all text-center shadow-sm flex justify-center items-center gap-2">
                                             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
                                             Back
                                         </button>
                                         <button type="submit" className="w-full md:w-auto px-6 py-2.5 bg-primary text-white font-bold text-[13px] rounded-lg hover:bg-primary-hover shadow-md hover-lift transition-all flex justify-center items-center gap-2">
-                                            Continue to Verification
-                                            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                                            Sign Up
+                                            <span className="material-symbols-outlined text-[18px]">how_to_reg</span>
                                         </button>
                                     </>
                                 )}
@@ -569,3 +727,4 @@ const TechnicianRegistrationPage = () => {
 };
 
 export default TechnicianRegistrationPage;
+

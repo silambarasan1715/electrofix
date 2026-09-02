@@ -117,7 +117,7 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="bg-background text-slate-900 min-h-screen flex flex-col relative overflow-hidden login-page-wrapper">
+        <div className="bg-transparent  text-slate-900 min-h-screen flex flex-col relative overflow-hidden login-page-wrapper">
             {/* Background decorative elements */}
             <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
@@ -272,7 +272,7 @@ const LoginPage = () => {
                                 <form onSubmit={handleForgotSubmitEmail} className="space-y-4">
                                     <div>
                                         <label className="block text-[13px] font-bold text-slate-700 mb-1">Email Address</label>
-                                        <input className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-[14px] text-slate-900" type="email" required value={forgotEmail} onChange={(e) => setForgotEmail(e.target.value)} placeholder="name@company.com" />
+                                        <input className="w-full px-4 py-2.5 bg-transparent  border border-slate-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-[14px] text-slate-900" type="email" required value={forgotEmail} onChange={(e) => setForgotEmail(e.target.value)} placeholder="name@company.com" />
                                     </div>
                                     <button className="w-full bg-primary text-white py-2.5 rounded-lg font-bold text-[14px] shadow hover:bg-primary-hover transition-all disabled:opacity-70" type="submit" disabled={isForgotSubmitting}>
                                         {isForgotSubmitting ? 'Sending...' : 'Send OTP'}
@@ -284,7 +284,7 @@ const LoginPage = () => {
                                 <form onSubmit={(e) => { e.preventDefault(); setForgotStep(3); setForgotError(''); }} className="space-y-4">
                                     <div>
                                         <label className="block text-[13px] font-bold text-slate-700 mb-1">6-Digit OTP</label>
-                                        <input className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-[14px] text-slate-900 text-center tracking-widest font-mono" type="text" required maxLength="6" value={forgotOtp} onChange={(e) => setForgotOtp(e.target.value)} placeholder="000000" />
+                                        <input className="w-full px-4 py-2.5 bg-transparent  border border-slate-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-[14px] text-slate-900 text-center tracking-widest font-mono" type="text" required maxLength="6" value={forgotOtp} onChange={(e) => setForgotOtp(e.target.value)} placeholder="000000" />
                                     </div>
                                     <button className="w-full bg-primary text-white py-2.5 rounded-lg font-bold text-[14px] shadow hover:bg-primary-hover transition-all" type="submit">
                                         Verify OTP
@@ -296,7 +296,7 @@ const LoginPage = () => {
                                 <form onSubmit={handleForgotSubmitReset} className="space-y-4">
                                     <div>
                                         <label className="block text-[13px] font-bold text-slate-700 mb-1">New Password</label>
-                                        <input className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-[14px] text-slate-900" type="password" required minLength="6" value={forgotNewPassword} onChange={(e) => setForgotNewPassword(e.target.value)} placeholder="••••••••" />
+                                        <input className="w-full px-4 py-2.5 bg-transparent  border border-slate-200 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-[14px] text-slate-900" type="password" required minLength="6" value={forgotNewPassword} onChange={(e) => setForgotNewPassword(e.target.value)} placeholder="••••••••" />
                                     </div>
                                     <button className="w-full bg-primary text-white py-2.5 rounded-lg font-bold text-[14px] shadow hover:bg-primary-hover transition-all disabled:opacity-70" type="submit" disabled={isForgotSubmitting}>
                                         {isForgotSubmitting ? 'Resetting...' : 'Reset Password'}
@@ -306,7 +306,7 @@ const LoginPage = () => {
 
                             {forgotStep === 4 && (
                                 <div className="space-y-4">
-                                    <button className="w-full bg-slate-100 text-slate-700 py-2.5 rounded-lg font-bold text-[14px] shadow-sm hover:bg-slate-200 transition-all" onClick={() => setShowForgotModal(false)}>
+                                    <button className="w-full bg-transparent  text-slate-700 py-2.5 rounded-lg font-bold text-[14px] shadow-sm hover:bg-slate-200 transition-all" onClick={() => setShowForgotModal(false)}>
                                         Return to Sign In
                                     </button>
                                 </div>
@@ -320,3 +320,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+

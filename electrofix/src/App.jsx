@@ -6,7 +6,7 @@ import LoginPage from './pages/Login/LoginPage';
 import SignupPage from './pages/Signup/SignupPage';
 import StartingPage from './pages/Starting/StartingPage';
 import TechnicianRegistrationPage from './pages/TechnicianRegistration/TechnicianRegistrationPage';
-import TechnicianVerificationPage from './pages/TechnicianVerification/TechnicianVerificationPage';
+
 import TechnicianCertificationPage from './pages/TechnicianCertification/TechnicianCertificationPage';
 import TechnicianReviewPage from './pages/TechnicianReview/TechnicianReviewPage';
 import TechnicianDiscoveryPage from './pages/TechnicianDiscovery/TechnicianDiscoveryPage';
@@ -34,7 +34,7 @@ function App() {
             <Route path="/ai-troubleshooting" element={<AITroubleshootingPage />} />
             <Route path="/technician-login" element={<TechnicianLoginPage />} />
             <Route path="/technician-registration" element={<TechnicianRegistrationPage />} />
-            <Route path="/technician-verification" element={<TechnicianVerificationPage />} />
+
             <Route path="/technician-certification" element={<TechnicianCertificationPage />} />
             <Route path="/technician-review" element={<TechnicianReviewPage />} />
             <Route path="/discovery/:category?" element={<TechnicianDiscoveryPage />} />

@@ -5,7 +5,7 @@ const LandingPage = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-background text-slate-900 font-body-md flex flex-col relative overflow-hidden">
+        <div className="min-h-screen bg-transparent  text-slate-900 font-body-md flex flex-col relative overflow-hidden">
             {/* Background decorative elements */}
             <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-400/20 rounded-full blur-[120px] -z-10"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/20 rounded-full blur-[120px] -z-10"></div>
@@ -123,13 +123,13 @@ const LandingPage = () => {
                     <div className="col-span-2 md:col-span-1 flex flex-col items-center md:items-start">
                         <h4 className="font-bold text-primary mb-5 text-[14px]">Connect</h4>
                         <div className="flex gap-4">
-                            <a href="#" className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-100 text-primary hover:bg-blue-100 transition-colors">
+                            <a href="#" className="w-9 h-9 flex items-center justify-center rounded-lg bg-transparent  text-primary hover:bg-blue-100 transition-colors">
                                 <span className="material-symbols-outlined text-[18px]">share</span>
                             </a>
-                            <a href="#" className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-100 text-primary hover:bg-blue-100 transition-colors">
+                            <a href="#" className="w-9 h-9 flex items-center justify-center rounded-lg bg-transparent  text-primary hover:bg-blue-100 transition-colors">
                                 <span className="material-symbols-outlined text-[18px]">public</span>
                             </a>
-                            <a href="#" className="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-100 text-primary hover:bg-blue-100 transition-colors">
+                            <a href="#" className="w-9 h-9 flex items-center justify-center rounded-lg bg-transparent  text-primary hover:bg-blue-100 transition-colors">
                                 <span className="material-symbols-outlined text-[18px]">mail</span>
                             </a>
                         </div>
@@ -150,3 +150,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+

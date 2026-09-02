@@ -39,7 +39,7 @@ const TechnicianCertificationPage = () => {
     };
 
     return (
-        <div className="bg-background text-slate-900 font-body-md min-h-screen flex flex-col relative overflow-hidden">
+        <div className="bg-transparent  text-slate-900 font-body-md min-h-screen flex flex-col relative overflow-hidden">
             {/* Background elements */}
             <div className="fixed top-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
             <div className="fixed bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-300/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
@@ -64,14 +64,14 @@ const TechnicianCertificationPage = () => {
                         <p className="text-[14px] font-bold text-slate-500 uppercase tracking-wider mt-1">Technician Portal</p>
                     </div>
                     
-                    <Link to="/technician-registration" className="flex items-center gap-4 px-5 py-4 text-slate-500 hover:bg-slate-100/50 hover:text-primary transition-all rounded-xl font-bold text-[14px] cursor-pointer">
+                    <Link to="/technician-registration" className="flex items-center gap-4 px-5 py-4 text-slate-500 hover:bg-transparent /50 hover:text-primary transition-all rounded-xl font-bold text-[14px] cursor-pointer">
                         <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-primary">
                             <span className="material-symbols-outlined text-[18px]">check</span>
                         </div>
                         Personal Details
                     </Link>
                     
-                    <Link to="/technician-verification" className="flex items-center gap-4 px-5 py-4 text-slate-500 hover:bg-slate-100/50 hover:text-primary transition-all rounded-xl font-bold text-[14px] cursor-pointer">
+                    <Link to="/technician-verification" className="flex items-center gap-4 px-5 py-4 text-slate-500 hover:bg-transparent /50 hover:text-primary transition-all rounded-xl font-bold text-[14px] cursor-pointer">
                         <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-primary">
                             <span className="material-symbols-outlined text-[18px]">check</span>
                         </div>
@@ -85,7 +85,7 @@ const TechnicianCertificationPage = () => {
                         Certifications
                     </div>
                     
-                    <a className="flex items-center gap-4 px-5 py-4 text-slate-500 hover:bg-slate-100/50 hover:text-primary transition-all rounded-xl font-bold text-[14px] cursor-pointer" href="#">
+                    <a className="flex items-center gap-4 px-5 py-4 text-slate-500 hover:bg-transparent /50 hover:text-primary transition-all rounded-xl font-bold text-[14px] cursor-pointer" href="#">
                         <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center">
                             <span className="material-symbols-outlined text-[18px]">assignment_turned_in</span>
                         </div>
@@ -120,7 +120,7 @@ const TechnicianCertificationPage = () => {
                                     <span className="text-[12px] font-bold text-emerald-700 bg-emerald-100/80 px-3 py-1.5 rounded-lg uppercase tracking-wider">Required</span>
                                 </div>
                                 
-                                <label htmlFor="file-upload" className="border-2 border-dashed border-slate-300 rounded-2xl p-10 flex flex-col items-center justify-center text-center bg-slate-50/50 hover:bg-slate-100 hover:border-primary transition-all cursor-pointer group-hover:border-primary/60 relative hover-lift">
+                                <label htmlFor="file-upload" className="border-2 border-dashed border-slate-300 rounded-2xl p-10 flex flex-col items-center justify-center text-center bg-slate-50/50 hover:bg-transparent  hover:border-primary transition-all cursor-pointer group-hover:border-primary/60 relative hover-lift">
                                     <input id="file-upload" type="file" className="hidden" onChange={handleFileChange} />
                                     <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:text-white transition-colors text-primary shadow-sm">
                                         <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 0" }}>cloud_upload</span>
@@ -173,7 +173,7 @@ const TechnicianCertificationPage = () => {
                                 <div className="flex flex-col gap-5 text-[15px] font-medium text-slate-600">
                                     <p>Ensure all documents are clearly legible and unexpired.</p>
 
-                                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-200/60">
+                                    <div className="bg-transparent  p-4 rounded-xl border border-slate-200/60">
                                         <strong className="text-slate-900 block mb-3 font-extrabold">Accepted Formats:</strong>
                                         <ul className="list-none space-y-3">
                                             <li className="flex items-center gap-3"><span className="material-symbols-outlined text-[20px] text-red-500">picture_as_pdf</span> PDF</li>
@@ -190,7 +190,7 @@ const TechnicianCertificationPage = () => {
 
                         {/* Action Buttons */}
                         <div className="flex justify-between items-center pt-8 border-t border-slate-200/60">
-                            <button type="button" onClick={() => navigate('/technician-verification')} className="px-8 py-3.5 bg-white text-slate-700 border border-slate-300 font-bold text-[15px] rounded-xl hover:bg-slate-50 transition-colors shadow-sm focus:outline-none">
+                            <button type="button" onClick={() => navigate('/technician-verification')} className="px-8 py-3.5 bg-white text-slate-700 border border-slate-300 font-bold text-[15px] rounded-xl hover:bg-transparent  transition-colors shadow-sm focus:outline-none">
                                 Back
                             </button>
                             <button type="submit" className="px-8 py-3.5 bg-primary text-white font-bold text-[15px] rounded-xl hover:bg-primary-hover shadow-lg hover-lift transition-all flex items-center gap-2 focus:outline-none">
@@ -207,3 +207,4 @@ const TechnicianCertificationPage = () => {
 };
 
 export default TechnicianCertificationPage;
+

@@ -77,7 +77,7 @@ const AITroubleshootingPage = () => {
             {/* Header */}
             <header className="flex items-center justify-between px-6 py-4 sticky top-0 z-10 bg-white/80 backdrop-blur-md">
                 <div className="flex items-center gap-3">
-                    <Link to="/" className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors text-slate-600">
+                    <Link to="/" className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center hover:bg-transparent  transition-colors text-slate-600">
                         <span className="material-symbols-outlined font-medium text-xl">menu</span>
                     </Link>
                     <h1 className="text-xl font-medium text-slate-700 flex items-center gap-2">
@@ -166,11 +166,8 @@ const AITroubleshootingPage = () => {
             {/* Gemini-style Input Area */}
             <div className="fixed bottom-0 left-0 w-full bg-gradient-to-t from-white via-white to-transparent pt-10 pb-6 px-4 md:px-8 z-20 pointer-events-none">
                 <div className="max-w-4xl mx-auto relative pointer-events-auto">
-                    <div className="bg-slate-100 rounded-[32px] p-2 pr-3 flex items-end gap-2 shadow-sm border border-slate-200/60 focus-within:bg-white focus-within:shadow-md focus-within:border-slate-300 transition-all duration-300">
-                        <button className="w-12 h-12 flex-shrink-0 flex items-center justify-center text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200 transition-colors">
-                            <span className="material-symbols-outlined text-[24px]">add_photo_alternate</span>
-                        </button>
-                        
+                    <div className="bg-transparent  rounded-[32px] p-2 pr-3 flex items-end gap-2 shadow-sm border border-slate-200/60 focus-within:bg-white focus-within:shadow-md focus-within:border-slate-300 transition-all duration-300">
+
                         <textarea 
                             className="flex-1 max-h-48 min-h-[48px] bg-transparent border-none outline-none focus:ring-0 py-3.5 px-2 text-[15.5px] text-slate-800 resize-none font-sans placeholder-slate-400"
                             placeholder="Ask about your appliance..."
@@ -192,22 +189,19 @@ const AITroubleshootingPage = () => {
                             }}
                         />
                         
-                        {inputValue.trim() ? (
-                            <button 
-                                onClick={() => {
+                        <button 
+                            onClick={() => {
+                                if (inputValue.trim()) {
                                     const val = inputValue;
                                     setInputValue('');
                                     handleSendMessage(val);
-                                }}
-                                className="w-12 h-12 flex-shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-slate-800 transition-all hover:shadow-md"
-                            >
-                                <span className="material-symbols-outlined text-[20px] ml-1">send</span>
-                            </button>
-                        ) : (
-                            <button className="w-12 h-12 flex-shrink-0 rounded-full bg-transparent text-slate-400 flex items-center justify-center hover:bg-slate-200 hover:text-slate-600 transition-colors">
-                                <span className="material-symbols-outlined text-[24px]">mic</span>
-                            </button>
-                        )}
+                                }
+                            }}
+                            disabled={!inputValue.trim()}
+                            className="w-12 h-12 flex-shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-slate-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-md mb-0.5"
+                        >
+                            <span className="material-symbols-outlined text-[20px] ml-1">send</span>
+                        </button>
                     </div>
                     <div className="text-center mt-3 text-[11px] text-slate-400 font-medium tracking-wide">
                         RepairHub AI can make mistakes. Verify important information.
@@ -219,3 +213,4 @@ const AITroubleshootingPage = () => {
 };
 
 export default AITroubleshootingPage;
+

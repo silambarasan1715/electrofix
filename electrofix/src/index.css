@@ -13,7 +13,8 @@
   }
 
   body {
-    @apply bg-[#f8fafc] text-slate-800 font-body-md antialiased;
+    @apply bg-gradient-to-b from-blue-100 via-white to-blue-50 text-slate-800 font-body-md antialiased min-h-screen;
+    background-attachment: fixed;
   }
 }
 
