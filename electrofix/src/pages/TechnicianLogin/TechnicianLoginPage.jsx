@@ -46,7 +46,10 @@ const TechnicianLoginPage = () => {
             {/* TopAppBar */}
             <header className="glass shadow-sm absolute top-0 w-full z-50 animate-fade-in-up">
                 <nav className="flex justify-between items-center w-full px-8 max-w-[1400px] mx-auto h-16">
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-6 md:gap-8">
+                        <button onClick={() => navigate(-1)} className="text-slate-500 hover:text-primary transition-colors cursor-pointer active:scale-95 flex items-center justify-center -ml-2" title="Go Back">
+                            <span className="material-symbols-outlined text-[24px]">arrow_back</span>
+                        </button>
                         <Link to="/" className="flex items-center gap-2">
                             <img src="/logo.png" alt="Logo" className="h-10 w-auto hover:scale-105 transition-transform" />
                             <span className="text-xl font-bold text-primary tracking-tight hidden sm:block">RepairHub</span>

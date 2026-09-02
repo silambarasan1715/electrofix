@@ -227,6 +227,9 @@ const TechnicianRegistrationPage = () => {
             {/* TopNavBar */}
             <header className="glass fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 md:px-10 h-16 animate-fade-in-up">
                 <div className="flex items-center gap-4">
+                    <button onClick={() => navigate(-1)} className="text-slate-500 hover:text-primary transition-colors cursor-pointer active:scale-95 flex items-center justify-center -ml-2" title="Go Back">
+                        <span className="material-symbols-outlined text-[24px]">arrow_back</span>
+                    </button>
                     <Link to="/" className="flex items-center gap-2">
                         <img src="/logo.png" alt="Logo" className="h-6 w-auto hover:scale-105 transition-transform" />
                         <span className="text-[20px] font-extrabold text-primary tracking-tight">
